@@ -1,10 +1,11 @@
 # Turning Everyday Earphones into a Full-Duplex Speech Eavesdropping Platform via Zero-Permission IMU
+
 ## Introduction
-Wearable earphones are widely adopted in daily scenarios, and most commercial products are equipped with Inertial Measurement Units (IMUs) for motion sensing and gesture control. Mechanical vibrations induced by sound propagation can be captured by built-in IMUs, which creates potential speech privacy leakage risks via physical side channels.
+Wearable earphones have become widely used in daily life. Most commercial earphones are integrated with Inertial Measurement Units (IMUs) for motion detection and gesture interaction. Mechanical vibrations generated during sound transmission can be captured by built-in IMUs, which brings potential speech privacy leakage risks through physical side channels.
 
-This work presents a **zero-permission IMU side-channel speech recognition system**. It requires no additional audio or system privileges, and is optimized for low sampling rate (25 Hz) IMU data. The framework converts raw sensor readings into RGB time-frequency spectrograms, and leverages attention mechanisms and multi-modal feature fusion to realize accurate recognition of human speech and on-device audio playback, even under signal superposition and motion interference.
+This work implements a **zero-permission IMU side-channel speech recognition system**. It requires no extra audio or system privileges and is optimized for IMU data collected at a sampling rate of 25 Hz. The system converts raw IMU time-series data into RGB time-frequency spectrograms, and adopts attention mechanisms as well as multi-modal feature fusion to accurately recognize human voices and audio played by earphones. It maintains stable performance even under signal superposition and complex motion interference.
 
-This repository releases the complete source code, preprocessing tools, auxiliary modules, sample datasets and pre-trained models. Users can directly run the core inference script with the provided samples to obtain speech recognition results.
+This repository contains complete source codes, preprocessing scripts, auxiliary functional modules, sample datasets and pre-trained models. **Users can directly run the core inference script with the provided samples to obtain speech recognition results.**
 
 ## Project Structure
 ```
@@ -16,6 +17,7 @@ Project Root/
 ├── CSV_product.py          # Generate CSV annotation files for datasets
 ├── movenoise.py            # Motion noise suppression module for images
 ├── CGAN_final.py           # Bidirectional conversion between accelerometer and gyroscope data
+├── cnn_cls.py              # Auxiliary classification network module
 ├── requirements.txt        # List of Python dependencies
 ├── HM_Sample.rar           # Near-end word-level IMU samples
 ├── SP_sample.rar           # Far-end digit-level IMU samples
@@ -33,71 +35,73 @@ Project Root/
   - NumPy, SciPy, Matplotlib, Transformers
 
 ### Install Dependencies
-Execute the command below in the project root directory:
+Run the following command under the project root directory:
 ```bash
 pip install -r requirements.txt
 ```
 
 ## Datasets and Pre-trained Models
-For privacy protection, only partial sample data is publicly available. Please match the datasets, label files and pre-trained models strictly according to application scenarios:
+To protect user privacy, only partial sample data is released. Please use datasets, label files and pre-trained models in matched groups as shown below:
 
 | Scenario | Dataset | Label File | Pre-trained Model |
-| ---- | ---- | ---- | ---- |
+| :--- | :--- | :--- | :--- |
 | Near-end | HM_Sample.rar | words.txt | hm_word.pth |
 | Far-end | SP_sample.rar | numbers.txt | sp_num.pth |
 
-### Raw Data Format
-All IMU data is stored in standard TXT files.
-- Naming rule: `acc_category_index.txt` / `gyro_category_index.txt`
-- File contents (4 columns): Timestamp, X-axis data, Y-axis data, Z-axis data
+### Raw Data Specification
+All original IMU data is stored in standard TXT files.
+- Naming Rule: `acc_category_index.txt` / `gyro_category_index.txt`
+- Data Format (4 columns): Timestamp, X-axis sensor data, Y-axis sensor data, Z-axis sensor data
 
 ## Quick Start
-### 1. Basic Preparation
+### 1. Preparations
 1. Unzip the target sample dataset.
-2. Place the corresponding label file and pre-trained model in the project root.
+2. Place the corresponding label file and pre-trained model into the project root directory.
 3. Manually create the output folder for spectrograms:
 ```bash
 mkdir rgb
 ```
 
 ### 2. Generate RGB Time-Frequency Spectrograms
-Modify `folder_path` in `RGB_Product.py` to your unzipped data path, then run:
+1. Open `RGB_Product.py` and modify `folder_path` to the path of unzipped data.
+2. Execute the script:
 ```bash
 python RGB_Product.py
 ```
 
 ### 3. Generate CSV Annotation File
-Configure input and output paths in `CSV_product.py`, then run:
+1. Configure input and output paths in `CSV_product.py`.
+2. Run the script:
 ```bash
 python CSV_product.py
 ```
 
 ### 4. Run Core Inference
-Configure file paths in `ModelTrain2.py`, then execute the core script to get recognition results:
+Configure relevant file paths in `ModelTrain2.py`, then run the core script to view recognition results:
 ```bash
 python ModelTrain2.py
 ```
 
 ### Output Description
-- The prediction results of the first 10 samples are printed on the console in the format: `Ground Truth, Predicted Label, Prediction Correctness`.
-- Results of all remaining samples are automatically saved to `result.txt`, which is generated by the program automatically.
+- Results of the first 10 samples are printed on the console in the format: `Ground Truth, Predicted Label, Prediction Correctness`.
+- Results of the remaining samples are automatically saved to `result.txt` (auto-generated by the program).
 
-## Auxiliary Modules
+## Auxiliary Modules Usage
 ### Motion Noise Denoising
 Remove motion artifacts from RGB spectrograms:
 ```bash
 python movenoise.py
 ```
-Configure relevant path parameters at the top of the script before execution.
+Configure path parameters at the top of the script before execution.
 
 ### Cross-Sensor Data Conversion
-Implement bidirectional transformation between accelerometer and gyroscope data for data augmentation and signal recovery:
+Realize bidirectional transformation between accelerometer and gyroscope data for data augmentation and signal reconstruction:
 ```bash
 python CGAN_final.py
 ```
 
 ## Known Limitations
-- Only limited sample data is released due to privacy restrictions.
-- The system is optimized for IMU data sampled at 25 Hz.
-- Recognition performance may degrade under strong continuous motion interference.
+- Only limited sample data is provided due to privacy protection policies.
+- The system is optimized for IMU data with a sampling rate of 25 Hz.
+- Recognition accuracy may decline under strong and continuous motion interference.
 
