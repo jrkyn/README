@@ -101,7 +101,7 @@ python CGAN_final.py
 ```
 
 ## Known Limitations
--To comply with privacy protection policies, only partial word-level samples (rather than complete sentences) are available. The study adopts a phoneme-based pixel reorganization strategy and leverages a large language model (LLM) with specially designed contextual prompt rules. The LLM takes top-N recognition candidates and contextual information as inputs, conducts semantic reasoning, error correction and logical optimization, and finally outputs coherent and complete sentences.
--The system is exclusively optimized for IMU data collected at a fixed sampling rate of 25 Hz, which is the default sampling rate of mainstream commercial earphones.
--Recognition accuracy will decrease obviously when facing strong and continuous human body or head motion interference.
+  -To comply with privacy protection policies, only partial word-level samples (rather than complete sentences) are available. The study adopts a phoneme-based pixel reorganization strategy and leverages a large language model (LLM) with specially designed contextual prompt rules. The LLM takes top-N recognition candidates and contextual information as inputs, conducts semantic reasoning, error correction and logical optimization, and finally outputs coherent and complete sentences.
+  -The system is exclusively optimized for IMU data collected at a fixed sampling rate of 25 Hz, which is the default sampling rate of mainstream commercial earphones.
+  -Recognition accuracy will decrease obviously when facing strong and continuous human body or head motion interference.
 
